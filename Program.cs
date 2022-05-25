@@ -1,4 +1,9 @@
-﻿class Program
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+namespace AddressBookProgram
+{
+class Program
 {
     /*
         1. Add the required classes to make the following code compile.
@@ -32,12 +37,20 @@
 
         // Create an AddressBook and add some contacts to it
         AddressBook addressBook = new AddressBook();
+       try{
+
+       
         addressBook.AddContact(bob);
         addressBook.AddContact(sue);
         addressBook.AddContact(juan);
 
         // Try to addd a contact a second time
         addressBook.AddContact(sue);
+       }
+       catch(ArgumentException)
+       {
+           Console.WriteLine($"Contact already Exists!");
+       }
 
 
         // Create a list of emails that match our Contacts
@@ -50,15 +63,55 @@
         // Insert an email that does NOT match a Contact
         emails.Insert(1, "not.in.addressbook@email.com");
 
-
-        //  Search the AddressBook by email and print the information about each Contact
+       
+       
         foreach (string email in emails)
         {
+         try{
             Contact contact = addressBook.GetByEmail(email);
             Console.WriteLine("----------------------------");
             Console.WriteLine($"Name: {contact.FullName}");
             Console.WriteLine($"Email: {contact.Email}");
             Console.WriteLine($"Address: {contact.Address}");
+        }
+       catch(KeyNotFoundException)
+       {
+           Console.WriteLine("not found");
+       }
+       }
+
+
+        //  Search the AddressBook by email and print the information about each Contact
+    }
+
+
+        public class Contact
+        {
+            public string FirstName {get;set;} 
+            public string LastName {get;set;} 
+            public string FullName {get{ return $"{FirstName} {LastName}";}}
+            
+            public string Email {get;set;} 
+            public string Address {get;set;} 
+            
+            
+            
+        }
+        public class AddressBook
+        {
+            public Dictionary<string, Contact> AddressList {get;set;} = new Dictionary<string, Contact>();
+          
+            public void AddContact(Contact contact)
+            {
+                AddressList.Add(contact.Email, contact);
+            }
+            public Contact GetByEmail(string email)
+            {
+                    return AddressList[email];
+                
+                
+            }
+            
         }
     }
 }
